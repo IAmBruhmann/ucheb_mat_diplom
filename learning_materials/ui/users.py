@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
     QComboBox,
     QDialog,
@@ -37,8 +38,11 @@ class UsersWidget(QWidget):
         layout.addWidget(self._table)
         bar = QHBoxLayout()
         add_btn = QPushButton("Добавить пользователя")
+        add_btn.setObjectName("primaryBtn")
+        add_btn.setCursor(Qt.CursorShape.PointingHandCursor)
         add_btn.clicked.connect(self._add)
         delete_btn = QPushButton("Удалить выбранного")
+        delete_btn.setCursor(Qt.CursorShape.PointingHandCursor)
         delete_btn.clicked.connect(self._delete)
         bar.addWidget(add_btn)
         bar.addWidget(delete_btn)
@@ -106,10 +110,27 @@ class UsersWidget(QWidget):
                 QMessageBox.Icon.Warning,
             )
             return
-        if QMessageBox.question(self, "Удаление", "Удалить пользователя?") != QMessageBox.StandardButton.Yes:
+        name = self._table.item(row, 1).text()
+        extra = ""
+        if self._db.user_has_requests(user_id):
+            extra = "\n\nУ пользователя есть заявки — они тоже будут удалены."
+        confirm = QMessageBox.question(
+            self,
+            "Подтверждение",
+            f"Удалить пользователя «{name}»?{extra}",
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+            QMessageBox.StandardButton.No,
+        )
+        if confirm != QMessageBox.StandardButton.Yes:
             return
         try:
             self._db.delete_user(user_id)
         except Exception as exc:  # noqa: BLE001
-            show_message(self, "Ошибка", str(exc), QMessageBox.Icon.Critical)
+            show_message(
+                self,
+                "Ошибка удаления",
+                f"Не удалось удалить пользователя: {exc}",
+                QMessageBox.Icon.Critical,
+            )
+            return
         self.reload()

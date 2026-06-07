@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 148" fill="none">
+  <g stroke="#499BB6" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M28 94L28 56C28 46 40 38 60 44L60 84C48 90 36 94 28 94Z" fill="none"/>
+    <path d="M60 44C80 38 92 46 92 56L92 94C80 94 68 90 60 84" fill="none"/>
+    <path d="M60 44V84"/>
+  </g>
+  <text
+    x="60"
+    y="132"
+    text-anchor="middle"
+    fill="#499BB6"
+    font-family="Segoe UI, Arial Rounded MT Bold, Nunito, sans-serif"
+    font-weight="700"
+    font-size="34"
+  >УМ</text>
+</svg>

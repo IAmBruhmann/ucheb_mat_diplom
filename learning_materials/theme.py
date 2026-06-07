@@ -17,44 +17,65 @@ class ThemePalette:
     bg_alt: str
     bg_input: str
     text: str
+    text_muted: str
     accent: str
     accent_hover: str
+    primary: str
+    primary_hover: str
+    primary_pressed: str
     bar: str
     header_bg: str
     header_text: str
     border: str
+    border_focus: str
+    row_hover: str
+    nav_hover: str
     discount_row: QColor
     no_access: QColor
 
 
 DARK = ThemePalette(
-    bg="#1a1a1a",
-    bg_alt="#2b2b2b",
-    bg_input="#3a3a3a",
-    text="#e8e8e8",
-    accent="#4d4d4d",
-    accent_hover="#5c5c5c",
-    bar="#0d0d0d",
-    header_bg="#252525",
-    header_text="#e8e8e8",
-    border="#404040",
-    discount_row=QColor("#2d3a2d"),
-    no_access=QColor("#2a3038"),
+    bg="#141820",
+    bg_alt="#1c2330",
+    bg_input="#252d3d",
+    text="#eef2ff",
+    text_muted="#9aa8c7",
+    accent="#2d3748",
+    accent_hover="#3d4d66",
+    primary="#4f8cff",
+    primary_hover="#6ba1ff",
+    primary_pressed="#3a6fd6",
+    bar="#0f131a",
+    header_bg="#1a2230",
+    header_text="#eef2ff",
+    border="#334155",
+    border_focus="#4f8cff",
+    row_hover="#243049",
+    nav_hover="#2a3550",
+    discount_row=QColor("#1f3d2f"),
+    no_access=QColor("#1f2a3d"),
 )
 
 LIGHT = ThemePalette(
-    bg="#f5f5f5",
+    bg="#f0f4fa",
     bg_alt="#ffffff",
     bg_input="#ffffff",
-    text="#1a1a1a",
-    accent="#e0e0e0",
-    accent_hover="#d0d0d0",
-    bar="#eeeeee",
-    header_bg="#ffffff",
-    header_text="#1a1a1a",
-    border="#d0d0d0",
-    discount_row=QColor("#dff4e4"),
-    no_access=QColor("#dcebff"),
+    text="#1e293b",
+    text_muted="#64748b",
+    accent="#e2e8f0",
+    accent_hover="#cbd5e1",
+    primary="#2563eb",
+    primary_hover="#3b82f6",
+    primary_pressed="#1d4ed8",
+    bar="#ffffff",
+    header_bg="#f8fafc",
+    header_text="#1e293b",
+    border="#cbd5e1",
+    border_focus="#2563eb",
+    row_hover="#e8f0fe",
+    nav_hover="#e2e8f0",
+    discount_row=QColor("#dcfce7"),
+    no_access=QColor("#dbeafe"),
 )
 
 _current: ThemeName = "dark"
@@ -74,6 +95,7 @@ def build_stylesheet(palette: ThemePalette) -> str:
 QWidget {{
     background-color: {p.bg};
     color: {p.text};
+    font-size: 11pt;
 }}
 QMainWindow, QDialog {{
     background-color: {p.bg};
@@ -85,58 +107,141 @@ QLabel {{
 #topBar {{
     background-color: {p.bar};
     color: {p.text};
-    padding: 8px;
-    border-bottom: 1px solid {p.border};
+    padding: 10px 14px;
+    border-bottom: 2px solid {p.border};
+}}
+#appLogo {{
+    background: transparent;
 }}
 #pageTitle {{
-    font-weight: bold;
-    font-size: 16px;
+    font-weight: 700;
+    font-size: 18pt;
     color: {p.text};
+    padding: 4px 0;
 }}
 QPushButton {{
     background-color: {p.accent};
     color: {p.text};
     border: 1px solid {p.border};
-    padding: 6px 14px;
-    border-radius: 4px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    min-height: 20px;
 }}
 QPushButton:hover {{
     background-color: {p.accent_hover};
+    border-color: {p.primary};
 }}
 QPushButton:pressed {{
-    background-color: {p.accent_hover};
+    background-color: {p.primary_pressed};
+    padding-top: 9px;
+    padding-bottom: 7px;
+}}
+QPushButton:disabled {{
+    color: {p.text_muted};
+    background-color: {p.bg_input};
+}}
+#primaryBtn {{
+    background-color: {p.primary};
+    color: #ffffff;
+    border: 1px solid {p.primary_hover};
+    font-weight: 600;
+}}
+#primaryBtn:hover {{
+    background-color: {p.primary_hover};
+    border-color: {p.primary_hover};
+}}
+#primaryBtn:pressed {{
+    background-color: {p.primary_pressed};
+}}
+#navBtn {{
+    background-color: transparent;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-weight: 600;
+}}
+#navBtn:hover {{
+    background-color: {p.nav_hover};
+    border-color: {p.border};
+}}
+#navBtn:pressed {{
+    background-color: {p.accent};
+}}
+#navBtn[active=true] {{
+    background-color: {p.primary};
+    color: #ffffff;
+    border-color: {p.primary_hover};
+}}
+#navBtn[active=true]:hover {{
+    background-color: {p.primary_hover};
+}}
+#logoutBtn {{
+    background-color: {p.accent};
+    border-radius: 20px;
+    padding: 8px 22px;
+    font-weight: 600;
+}}
+#logoutBtn:hover {{
+    background-color: {p.primary};
+    color: #ffffff;
+    border-color: {p.primary_hover};
 }}
 #themeToggle {{
     background-color: {p.accent};
     color: {p.text};
-    font-weight: bold;
+    font-weight: 700;
+    border-radius: 16px;
+    padding: 6px 14px;
+}}
+#themeToggle:hover {{
+    background-color: {p.primary};
+    color: #ffffff;
 }}
 QLineEdit, QTextEdit, QSpinBox, QDoubleSpinBox, QComboBox {{
     background-color: {p.bg_input};
     color: {p.text};
     border: 1px solid {p.border};
-    padding: 4px;
-    border-radius: 3px;
+    padding: 7px 10px;
+    border-radius: 8px;
+    selection-background-color: {p.primary};
+    selection-color: #ffffff;
+}}
+QLineEdit:hover, QTextEdit:hover, QSpinBox:hover, QDoubleSpinBox:hover, QComboBox:hover {{
+    border-color: {p.primary_hover};
+}}
+QLineEdit:focus, QTextEdit:focus, QSpinBox:focus, QDoubleSpinBox:focus, QComboBox:focus {{
+    border: 2px solid {p.border_focus};
+    padding: 6px 9px;
+}}
+QComboBox::drop-down {{
+    border: none;
+    width: 24px;
 }}
 QComboBox QAbstractItemView {{
     background-color: {p.bg_input};
     color: {p.text};
-    selection-background-color: {p.accent_hover};
-    selection-color: {p.text};
+    border: 1px solid {p.border};
+    selection-background-color: {p.primary};
+    selection-color: #ffffff;
+    outline: none;
 }}
 QTableWidget {{
     background-color: {p.bg_alt};
     color: {p.text};
     gridline-color: {p.border};
     border: 1px solid {p.border};
+    border-radius: 10px;
+    alternate-background-color: {p.bg};
 }}
 QTableWidget::item {{
-    background-color: {p.bg_alt};
-    color: {p.text};
+    padding: 6px;
+}}
+QTableWidget::item:hover {{
+    background-color: {p.row_hover};
 }}
 QTableWidget::item:selected {{
-    background-color: {p.accent_hover};
-    color: {p.text};
+    background-color: {p.primary};
+    color: #ffffff;
 }}
 QHeaderView {{
     background-color: {p.header_bg};
@@ -144,12 +249,41 @@ QHeaderView {{
 QHeaderView::section {{
     background-color: {p.header_bg};
     color: {p.header_text};
-    padding: 6px;
-    border: 1px solid {p.border};
+    padding: 8px;
+    border: none;
+    border-bottom: 2px solid {p.border};
+    font-weight: 600;
 }}
 QTableCornerButton::section {{
     background-color: {p.header_bg};
-    border: 1px solid {p.border};
+    border: none;
+}}
+QScrollBar:vertical {{
+    background: {p.bg};
+    width: 10px;
+    margin: 0;
+    border-radius: 5px;
+}}
+QScrollBar::handle:vertical {{
+    background: {p.accent_hover};
+    min-height: 24px;
+    border-radius: 5px;
+}}
+QScrollBar::handle:vertical:hover {{
+    background: {p.primary};
+}}
+QScrollBar:horizontal {{
+    background: {p.bg};
+    height: 10px;
+    border-radius: 5px;
+}}
+QScrollBar::handle:horizontal {{
+    background: {p.accent_hover};
+    min-width: 24px;
+    border-radius: 5px;
+}}
+QScrollBar::handle:horizontal:hover {{
+    background: {p.primary};
 }}
 QMessageBox {{
     background-color: {p.bg};
@@ -159,14 +293,15 @@ QMessageBox {{
 
 
 def apply_table_header_style(table: QTableWidget) -> None:
-    """Apply header colors directly (Qt sometimes ignores global QSS on headers)."""
     p = current_palette()
     section_style = f"""
     QHeaderView::section {{
         background-color: {p.header_bg};
         color: {p.header_text};
-        border: 1px solid {p.border};
-        padding: 6px;
+        border: none;
+        border-bottom: 2px solid {p.border};
+        padding: 8px;
+        font-weight: 600;
     }}
     """
     table.horizontalHeader().setStyleSheet(section_style)

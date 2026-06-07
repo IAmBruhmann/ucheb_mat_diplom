@@ -24,6 +24,8 @@ class MainShell(QWidget):
         top = QHBoxLayout()
         top.addStretch()
         logout = QPushButton("Выйти")
+        logout.setObjectName("logoutBtn")
+        logout.setCursor(Qt.CursorShape.PointingHandCursor)
         logout.clicked.connect(self._logout_request)
         top.addWidget(logout, alignment=Qt.AlignmentFlag.AlignCenter)
         top.addStretch()
@@ -33,11 +35,14 @@ class MainShell(QWidget):
         layout.addWidget(top_bar)
 
         nav = QHBoxLayout()
-        nav.addWidget(QLabel(f"«Учебные материалы» - {user.full_name}"))
+        nav.addWidget(QLabel(f'«УМ» — {user.full_name}'))
         nav.addStretch()
         self._btn_catalog = QPushButton("Каталог")
         self._btn_requests = QPushButton("Заявки")
         self._btn_users = QPushButton("Пользователи")
+        for btn in (self._btn_catalog, self._btn_requests, self._btn_users):
+            btn.setObjectName("navBtn")
+            btn.setCursor(Qt.CursorShape.PointingHandCursor)
         nav.addWidget(self._btn_catalog)
         nav.addWidget(self._btn_requests)
         nav.addWidget(self._btn_users)
@@ -57,11 +62,12 @@ class MainShell(QWidget):
         self._stack.addWidget(self._users)
         layout.addWidget(self._stack)
 
-        self._btn_catalog.clicked.connect(lambda: self._stack.setCurrentIndex(0))
-        self._btn_requests.clicked.connect(self._open_requests)
-        self._btn_users.clicked.connect(lambda: self._stack.setCurrentIndex(2))
+        self._btn_catalog.clicked.connect(lambda: self._show_page(0))
+        self._btn_requests.clicked.connect(lambda: self._show_page(1, reload_requests=True))
+        self._btn_users.clicked.connect(lambda: self._show_page(2))
         self._btn_users.setVisible(user.role_code == "admin")
         self._logout_callback: Optional[Callable[[], None]] = None
+        self._show_page(0)
 
     def set_logout_handler(self, callback: Callable[[], None]) -> None:
         self._logout_callback = callback
@@ -70,9 +76,15 @@ class MainShell(QWidget):
         if self._logout_callback is not None:
             self._logout_callback()
 
-    def _open_requests(self) -> None:
-        self._requests.reload()
-        self._stack.setCurrentIndex(1)
+    def _show_page(self, index: int, *, reload_requests: bool = False) -> None:
+        if reload_requests:
+            self._requests.reload()
+        self._stack.setCurrentIndex(index)
+        nav_buttons = (self._btn_catalog, self._btn_requests, self._btn_users)
+        for btn_index, button in enumerate(nav_buttons):
+            button.setProperty("active", btn_index == index)
+            button.style().unpolish(button)
+            button.style().polish(button)
 
     def refresh_catalog(self) -> None:
         self._catalog._fill_filters()

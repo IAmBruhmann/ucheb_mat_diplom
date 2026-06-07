@@ -26,6 +26,7 @@ from PyQt6.QtWidgets import (
 from learning_materials.constants import Mode
 from learning_materials.theme import apply_table_header_style, current_palette
 from learning_materials.database import Database, MaterialRecord, UserRecord
+from learning_materials.ui.logo import AppLogo
 from learning_materials.ui.messages import show_message
 
 
@@ -45,9 +46,16 @@ class CatalogWidget(QWidget):
         self._all: list[MaterialRecord] = []
 
         layout = QVBoxLayout(self)
+        header = QHBoxLayout()
+        header.setSpacing(14)
+        header.addWidget(AppLogo(height=76, centered=False))
         self._title = QLabel()
         self._title.setObjectName("pageTitle")
-        layout.addWidget(self._title)
+        self._title.setAlignment(Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignLeft)
+        header.addWidget(self._title, stretch=1)
+        header_widget = QWidget()
+        header_widget.setLayout(header)
+        layout.addWidget(header_widget)
 
         controls = QGridLayout()
         self._search = QLineEdit()
@@ -85,8 +93,11 @@ class CatalogWidget(QWidget):
 
         admin_bar = QHBoxLayout()
         self._btn_add = QPushButton("Добавить материал")
+        self._btn_add.setObjectName("primaryBtn")
+        self._btn_add.setCursor(Qt.CursorShape.PointingHandCursor)
         self._btn_add.clicked.connect(lambda: self._open_editor(None))
         self._btn_delete = QPushButton("Удалить выбранный")
+        self._btn_delete.setCursor(Qt.CursorShape.PointingHandCursor)
         self._btn_delete.clicked.connect(self._delete_selected)
         admin_bar.addWidget(self._btn_add)
         admin_bar.addWidget(self._btn_delete)
@@ -96,6 +107,8 @@ class CatalogWidget(QWidget):
 
         student_bar = QHBoxLayout()
         self._btn_request = QPushButton("Оформить заявку на выбранный материал")
+        self._btn_request.setObjectName("primaryBtn")
+        self._btn_request.setCursor(Qt.CursorShape.PointingHandCursor)
         self._btn_request.clicked.connect(self._create_request)
         student_bar.addWidget(self._btn_request)
         self._student_widget = QWidget()

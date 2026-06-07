@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import Callable, Optional
 
 from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QCursor
 from PyQt6.QtWidgets import (
     QDialog,
     QDialogButtonBox,
@@ -19,6 +20,7 @@ from PyQt6.QtWidgets import (
 )
 
 from learning_materials.database import Database, UserRecord
+from learning_materials.ui.logo import AppLogo
 from learning_materials.ui.messages import show_message
 
 
@@ -30,7 +32,9 @@ class LoginWidget(QWidget):
         self._guest_callback: Optional[Callable[[], None]] = None
 
         layout = QVBoxLayout(self)
-        title = QLabel("Информационная система «Учебные материалы»")
+        layout.setSpacing(12)
+        layout.addWidget(AppLogo(height=110))
+        title = QLabel('Информационная система — «УМ»')
         title.setObjectName("pageTitle")
         title.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(title)
@@ -46,10 +50,14 @@ class LoginWidget(QWidget):
 
         row = QHBoxLayout()
         login_btn = QPushButton("Войти")
+        login_btn.setObjectName("primaryBtn")
+        login_btn.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         login_btn.clicked.connect(self._try_login)
         guest_btn = QPushButton("Каталог как гость")
+        guest_btn.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         guest_btn.clicked.connect(self._guest)
         register_btn = QPushButton("Регистрация студента")
+        register_btn.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         register_btn.clicked.connect(self._register)
         row.addWidget(login_btn)
         row.addWidget(guest_btn)
